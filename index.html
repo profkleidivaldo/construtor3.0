@@ -1,0 +1,1805 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Construtor de Livro Didático Digital - Profissional</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Cabeçalho Superior */
+        .top-header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .top-header h1 {
+            font-size: 24px;
+            color: #667eea;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .top-header h1::before {
+            content: "📚";
+            font-size: 28px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .header-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-download {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-download:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+
+        .btn-clear {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-clear:hover {
+            background: #da190b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+        }
+
+        /* Container Principal */
+        .main-container {
+            flex: 1;
+            display: flex;
+            max-width: 1600px;
+            width: 100%;
+            margin: 20px auto;
+            gap: 20px;
+            padding: 0 20px;
+        }
+
+        /* Menu Lateral Moderno */
+        #menu-lateral {
+            width: 280px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: calc(100vh - 140px);
+            overflow-y: auto;
+        }
+
+        #menu-lateral h2 {
+            font-size: 18px;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .btn:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn::before {
+            font-size: 20px;
+        }
+
+        .btn-titulo::before { content: "📋"; }
+        .btn-subtitulo::before { content: "📝"; }
+        .btn-texto::before { content: "✏️"; }
+        .btn-imagem::before { content: "🖼️"; }
+        .btn-video::before { content: "🎥"; }
+        .btn-dica::before { content: "💡"; }
+        .btn-pergunta::before { content: "❓"; }
+        .btn-quiz::before { content: "📊"; }
+        .btn-embed::before { content: "🔗"; }
+
+        /* Editor Principal */
+        #editor {
+            flex: 1;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            max-height: calc(100vh - 140px);
+            position: relative;
+        }
+
+        #visualizacao {
+            font-family: 'Georgia', serif;
+            font-size: 18px;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        /* Estilos do Conteúdo */
+        h1 {
+            position: relative;
+            text-align: center;
+            color: white;
+            font-size: 36px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 180px;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            margin: 0 0 30px 0;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+        }
+
+        h2 {
+            color: #667eea;
+            font-size: 28px;
+            margin: 30px 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        h2 + p:first-letter {
+            float: left;
+            font-size: 3.8em;
+            line-height: 0.9;
+            padding-right: 12px;
+            padding-left: 3px;
+            font-weight: bold;
+            color: #667eea;
+            font-family: Georgia, serif;
+        }
+
+        p {
+            margin: 15px 0;
+            text-align: justify;
+        }
+
+        .media-element {
+            margin: 20px 0;
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            margin: 20px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .dica-destacada {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 5px solid #667eea;
+            font-weight: 500;
+            font-size: 16px;
+            color: #333;
+            margin: 25px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .dica-destacada::before {
+            content: "💡 Dica: ";
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .pergunta-direta {
+            margin: 25px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%);
+            border-left: 5px solid #764ba2;
+            border-radius: 12px;
+            font-weight: 600;
+            color: #764ba2;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .papel-resposta {
+            display: block;
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            font-family: 'Georgia', serif;
+            font-size: 16px;
+            line-height: 32px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            outline: none;
+            background: white;
+            resize: vertical;
+            margin: 15px 0;
+            transition: border-color 0.3s ease;
+        }
+
+        .papel-resposta:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        /* Quiz Cards */
+        .quiz-card {
+            margin: 25px 0;
+            padding: 25px;
+            border-radius: 12px;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border: 2px solid #e0e0e0;
+        }
+
+        .quiz-header {
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: #667eea;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .quiz-enunciado {
+            font-size: 17px;
+            margin-bottom: 12px;
+            color: #555;
+            font-style: italic;
+        }
+
+        .quiz-pergunta {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .quiz-image {
+            max-width: 100%;
+            height: auto;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .option-label {
+            display: block;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .option-label:hover {
+            border-color: #667eea;
+            background: #667eea05;
+        }
+
+        .option-input {
+            margin-right: 12px;
+        }
+
+        .option-label.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .option-label.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .quiz-actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .quiz-result {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        /* Popups */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .popup {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            z-index: 1001;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .popup h2 {
+            color: #667eea;
+            font-size: 24px;
+            margin-bottom: 20px;
+            border: none;
+            padding: 0;
+        }
+
+        .popup input[type="text"], 
+        .popup textarea, 
+        .popup select {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: border-color 0.3s ease;
+        }
+
+        .popup input[type="text"]:focus,
+        .popup textarea:focus,
+        .popup select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .popup label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+
+        .two-cols {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .popup-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .popup-actions .btn {
+            flex: 1;
+        }
+
+        .small-muted {
+            font-size: 13px;
+            color: #999;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        /* Tutor de IA Integrado */
+        #gem-assistant-container * {
+            box-sizing: border-box;
+        }
+
+        #gem-trigger {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+            transition: all 0.3s ease;
+            z-index: 10000;
+            border: 3px solid white;
+        }
+
+        #gem-trigger:hover {
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        #gem-chat-window {
+            position: fixed;
+            bottom: 120px;
+            right: 30px;
+            width: 400px;
+            max-width: 90vw;
+            height: 600px;
+            max-height: 80vh;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+            display: none;
+            flex-direction: column;
+            z-index: 9999;
+            overflow: hidden;
+            border: 2px solid #667eea;
+        }
+
+        #gem-chat-window.active {
+            display: flex;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .gem-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .gem-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: white !important;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .gem-header h3::before {
+            content: "🤖";
+            font-size: 24px;
+        }
+
+        .gem-close {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .gem-close:hover {
+            background: rgba(255,255,255,0.3);
+            transform: rotate(90deg);
+        }
+
+        #gem-messages-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .gem-msg {
+            padding: 12px 16px;
+            border-radius: 15px;
+            max-width: 85%;
+            font-size: 14px;
+            line-height: 1.6;
+            word-wrap: break-word;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .gem-msg.user {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 3px;
+        }
+
+        .gem-msg.assistant {
+            background: white;
+            color: #333;
+            align-self: flex-start;
+            border-bottom-left-radius: 3px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .gem-input-box {
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+            background: white;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        #gem-input {
+            flex: 1;
+            padding: 12px 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            outline: none;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        #gem-input:focus {
+            border-color: #667eea;
+        }
+
+        #gem-send {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        #gem-send:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        #gem-typing {
+            display: none;
+            padding: 10px 20px;
+            font-size: 13px;
+            color: #999;
+            font-style: italic;
+        }
+
+        #gem-typing.active {
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .main-container {
+                flex-direction: column;
+            }
+
+            #menu-lateral {
+                width: 100%;
+                max-height: none;
+            }
+
+            #editor {
+                max-height: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .top-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .header-actions {
+                width: 100%;
+                justify-content: center;
+            }
+
+            #gem-chat-window {
+                width: 95vw;
+                right: 2.5vw;
+            }
+        }
+
+        /* Scrollbar personalizada */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #764ba2;
+        }
+    </style>
+</head>
+<body>
+    <!-- Cabeçalho Superior -->
+    <div class="top-header">
+       
+        <div class="header-actions">
+            <button class="header-btn btn-download" onclick="baixarCodigoHTML()">💾 Baixar HTML</button>
+            <button class="header-btn btn-clear" onclick="limparLocalStorage()">🗑️ Limpar Respostas</button>
+        </div>
+    </div>
+
+    <!-- Container Principal -->
+    <div class="main-container">
+        <!-- Menu Lateral -->
+        <div id="menu-lateral">
+            <h2>Elementos</h2>
+            <button class="btn btn-titulo" onclick="abrirInsercao('tituloPopup')">Título</button>
+            <button class="btn btn-subtitulo" onclick="abrirInsercao('subtituloPopup')">Subtítulo</button>
+            <button class="btn btn-texto" onclick="abrirInsercao('textoPopup')">Texto</button>
+            <button class="btn btn-imagem" onclick="abrirInsercao('imagemPopup')">Imagem</button>
+            <button class="btn btn-video" onclick="abrirInsercao('videoPopup')">Vídeo</button>
+            <button class="btn btn-dica" onclick="abrirInsercao('dicaPopup')">Dica Destacada</button>
+            <button class="btn btn-pergunta" onclick="abrirInsercao('perguntaPopup')">Pergunta Direta</button>
+            <button class="btn btn-quiz" onclick="abrirInsercao('quizPopup')">Quiz (Múltipla Escolha)</button>
+            <button class="btn btn-embed" onclick="abrirInsercao('elementoPopup')">Embed HTML</button>
+        </div>
+
+        <!-- Editor -->
+        <div id="editor">
+            <div id="viewer">
+                <div id="visualizacao" contenteditable="true"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tutor de IA -->
+    <div id="gem-assistant-container">
+        <div id="gem-trigger">🤖</div>
+        <div id="gem-chat-window">
+            <div class="gem-header">
+                <h3>Tutor Inteligente</h3>
+                <button class="gem-close">×</button>
+            </div>
+            <div id="gem-messages-area">
+                <div class="gem-msg assistant">Olá! Sou seu tutor inteligente. Como posso ajudar você hoje?</div>
+            </div>
+            <div id="gem-typing">Digitando...</div>
+            <div class="gem-input-box">
+                <input type="text" id="gem-input" placeholder="Digite sua pergunta..." autocomplete="off">
+                <button id="gem-send">Enviar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- POPUPS -->
+    <div class="overlay" id="tituloPopup">
+        <div class="popup">
+            <h2>Inserir Título</h2>
+            <label>Título:</label>
+            <input type="text" placeholder="Digite o título" id="tituloInput">
+            <label>Link da imagem de fundo (opcional):</label>
+            <input type="text" placeholder="https://..." id="tituloBgInput">
+            <div class="popup-actions">
+                <button class="btn" onclick="inserirTitulo()">Inserir</button>
+                <button class="btn" onclick="fecharInsercao('tituloPopup')">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay" id="subtituloPopup">
+        <div class="popup">
+            <h2>Inserir Subtítulo</h2>
+            <label>Subtítulo:</label>
+            <input type="text" placeholder="Digite o subtítulo" id="subtituloInput">
+            <div class="popup-actions">
+                <button class="btn" onclick="inserirSubtitulo()">Inserir</button>
+                <button class="btn" onclick="fecharInsercao('subtituloPopup')">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay" id="textoPopup">
+        <div class="popup">
+            <h2>Inserir Texto</h2>
+            <label>Texto:</label>
+            <textarea rows="6" id="textoInput" placeholder="Digite o texto do parágrafo..."></textarea>
+            <div class="popup-actions">
+                <button class="btn" onclick="inserirTexto()">Inserir</button>
+                <button class="btn" onclick="fecharInsercao('textoPopup')">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay" id="imagemPopup">
+        <div class="popup">
+            <h2>Inserir Imagem</h2>
+            <label>URL da Imagem:</label>
+            <input type="text" placeholder="https://..." id="imagemInput">
+            <div class="popup-actions">
+                <button class="btn" onclick="inserirImagem()">Inserir</button>
+                <button class="btn" onclick="fecharInsercao('imagemPopup')">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay" id="videoPopup">
+        <div class="popup">
+            <h2>Inserir Vídeo</h2>
+            <label>Link do YouTube:</label>
+            <input type="text" placeholder="https://www.youtube.com/watch?v=..." id="videoInput">
+            <div class="popup-actions">
+                <button class="btn" onclick="inserirVideo()">Inserir</button>
+                <button class="btn" onclick="fecharInsercao('videoPopup')">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay" id="dicaPopup">
+        <div class="popup">
+            <h2>Inserir Dica Destacada</h2>
+            <label>Dica:</label>
+            <textarea rows="4" id="dicaInput" placeholder="Digite a dica..."></textarea>
+            <div class="popup-actions">
+                <button class="btn" onclick="inserirDica()">Inserir</button>
+                <button class="btn" onclick="fecharInsercao('dicaPopup')">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay" id="perguntaPopup">
+        <div class="popup">
+            <h2>Inserir Pergunta Direta</h2>
+            <label>Pergunta:</label>
+            <textarea rows="3" id="perguntaInput" placeholder="Digite a pergunta..."></textarea>
+            <div class="popup-actions">
+                <button class="btn" onclick="inserirPerguntaDireta()">Inserir Pergunta</button>
+                <button class="btn" onclick="fecharInsercao('perguntaPopup')">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay" id="quizPopup">
+        <div class="popup">
+            <h2>Criar Quiz de Múltipla Escolha</h2>
+            
+            <label>Enunciado (opcional):</label>
+            <input type="text" id="quizEnunciado" placeholder="Ex: Atente ao texto abaixo...">
+
+            <label>URL da Imagem (opcional):</label>
+            <input type="text" id="quizImageUrl" placeholder="https://...">
+
+            <label>Pergunta:</label>
+            <input type="text" id="quizPergunta" placeholder="Digite a pergunta" required>
+
+            <div class="two-cols">
+                <div>
+                    <label>Opção A:</label>
+                    <input type="text" id="quizOpt1" placeholder="Opção A">
+                </div>
+                <div>
+                    <label>Opção B:</label>
+                    <input type="text" id="quizOpt2" placeholder="Opção B">
+                </div>
+                <div>
+                    <label>Opção C:</label>
+                    <input type="text" id="quizOpt3" placeholder="Opção C">
+                </div>
+                <div>
+                    <label>Opção D:</label>
+                    <input type="text" id="quizOpt4" placeholder="Opção D">
+                </div>
+            </div>
+
+            <label>Resposta Correta:</label>
+            <select id="quizCorrect">
+                <option value="1">Opção A</option>
+                <option value="2">Opção B</option>
+                <option value="3">Opção C</option>
+                <option value="4">Opção D</option>
+            </select>
+
+            <div class="popup-actions">
+                <button class="btn" onclick="inserirQuiz()">Inserir Quiz</button>
+                <button class="btn" onclick="fecharInsercao('quizPopup')">Cancelar</button>
+            </div>
+            <p class="small-muted">Cada quiz possui verificação individual e salva respostas localmente.</p>
+        </div>
+    </div>
+
+    <div class="overlay" id="elementoPopup">
+        <div class="popup">
+            <h2>Inserir Elemento HTML</h2>
+            <label>Código HTML:</label>
+            <textarea rows="6" id="elementoInput" placeholder="<div>...</div>"></textarea>
+            <div class="popup-actions">
+                <button class="btn" onclick="inserirElemento()">Inserir</button>
+                <button class="btn" onclick="fecharInsercao('elementoPopup')">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== FUNÇÕES DE POPUP ====================
+        function abrirInsercao(id) {
+            document.getElementById(id).style.display = 'block';
+        }
+
+        function fecharInsercao(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        // Fechar popup ao clicar no overlay
+        document.querySelectorAll('.overlay').forEach(overlay => {
+            overlay.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.style.display = 'none';
+                }
+            });
+        });
+
+        // ==================== INSERÇÕES DE CONTEÚDO ====================
+        function inserirTitulo() {
+            const t = document.getElementById('tituloInput').value;
+            const bg = document.getElementById('tituloBgInput').value;
+            if (!t) { alert('Digite um título'); return; }
+            
+            const el = document.createElement('h1');
+            el.textContent = t;
+            if (bg) el.style.background = `url('${bg}') center/cover no-repeat`;
+            document.getElementById('visualizacao').appendChild(el);
+            
+            document.getElementById('tituloInput').value = '';
+            document.getElementById('tituloBgInput').value = '';
+            fecharInsercao('tituloPopup');
+        }
+
+        function inserirSubtitulo() {
+            const t = document.getElementById('subtituloInput').value;
+            if (!t) { alert('Digite um subtítulo'); return; }
+            
+            const el = document.createElement('h2');
+            el.textContent = t;
+            document.getElementById('visualizacao').appendChild(el);
+            
+            document.getElementById('subtituloInput').value = '';
+            fecharInsercao('subtituloPopup');
+        }
+
+        function inserirTexto() {
+            const t = document.getElementById('textoInput').value;
+            if (!t) { alert('Digite um texto'); return; }
+            
+            const p = document.createElement('p');
+            p.textContent = t;
+            document.getElementById('visualizacao').appendChild(p);
+            
+            document.getElementById('textoInput').value = '';
+            fecharInsercao('textoPopup');
+        }
+
+        function inserirImagem() {
+            const url = document.getElementById('imagemInput').value;
+            if (!url) { alert('Digite uma URL'); return; }
+            
+            const img = document.createElement('img');
+            img.src = url;
+            img.className = 'media-element';
+            document.getElementById('visualizacao').appendChild(img);
+            
+            document.getElementById('imagemInput').value = '';
+            fecharInsercao('imagemPopup');
+        }
+
+        function inserirVideo() {
+            const v = document.getElementById('videoInput').value;
+            if (!v) { alert('Digite uma URL do YouTube'); return; }
+            
+            const div = document.createElement('div');
+            div.className = 'video-container';
+            const iframe = document.createElement('iframe');
+            let embed = v;
+            if (v.includes('watch?v=')) embed = v.replace('watch?v=', 'embed/');
+            if (v.includes('youtu.be/')) embed = v.replace('youtu.be/', 'www.youtube.com/embed/');
+            iframe.src = embed;
+            iframe.allowFullscreen = true;
+            div.appendChild(iframe);
+            document.getElementById('visualizacao').appendChild(div);
+            
+            document.getElementById('videoInput').value = '';
+            fecharInsercao('videoPopup');
+        }
+
+        function inserirDica() {
+            const d = document.getElementById('dicaInput').value;
+            if (!d) { alert('Digite uma dica'); return; }
+            
+            const div = document.createElement('div');
+            div.className = 'dica-destacada';
+            div.textContent = d;
+            document.getElementById('visualizacao').appendChild(div);
+            
+            document.getElementById('dicaInput').value = '';
+            fecharInsercao('dicaPopup');
+        }
+
+        function inserirPerguntaDireta() {
+            const pergunta = document.getElementById('perguntaInput').value;
+            if (!pergunta) { alert('Digite uma pergunta'); return; }
+            
+            const container = document.createElement('div');
+            container.className = 'inserido';
+
+            const titulo = document.createElement('div');
+            titulo.className = 'pergunta-direta';
+            titulo.textContent = pergunta;
+
+            const chave = 'resposta_' + btoa(pergunta + '_' + Date.now());
+            const resposta = document.createElement('textarea');
+            resposta.className = 'papel-resposta';
+            resposta.setAttribute('data-chave', chave);
+            resposta.placeholder = 'Digite sua resposta aqui...';
+
+            const salvo = localStorage.getItem(chave);
+            if (salvo) resposta.value = salvo;
+
+            resposta.addEventListener('input', () => localStorage.setItem(chave, resposta.value));
+
+            container.appendChild(titulo);
+            container.appendChild(resposta);
+            document.getElementById('visualizacao').appendChild(container);
+            
+            document.getElementById('perguntaInput').value = '';
+            fecharInsercao('perguntaPopup');
+        }
+
+        function inserirElemento() {
+            const html = document.getElementById('elementoInput').value;
+            if (!html) { alert('Digite o código HTML'); return; }
+            
+            const div = document.createElement('div');
+            div.innerHTML = html;
+            document.getElementById('visualizacao').appendChild(div);
+            
+            document.getElementById('elementoInput').value = '';
+            fecharInsercao('elementoPopup');
+        }
+
+        // ==================== QUIZ ====================
+        function inserirQuiz() {
+            const enunciado = document.getElementById('quizEnunciado').value.trim();
+            const imageUrl = document.getElementById('quizImageUrl').value.trim();
+            const pergunta = document.getElementById('quizPergunta').value.trim();
+            const opt1 = document.getElementById('quizOpt1').value.trim() || 'Opção A';
+            const opt2 = document.getElementById('quizOpt2').value.trim() || 'Opção B';
+            const opt3 = document.getElementById('quizOpt3').value.trim() || 'Opção C';
+            const opt4 = document.getElementById('quizOpt4').value.trim() || 'Opção D';
+            const correct = document.getElementById('quizCorrect').value;
+
+            if (!pergunta) { alert('Digite a pergunta.'); return; }
+
+            const quizId = 'quiz_' + btoa(pergunta + '_' + Date.now());
+            const container = document.createElement('div');
+            container.className = 'quiz-card';
+            container.setAttribute('data-quiz-id', quizId);
+
+            let html = '';
+            html += '<div class="quiz-header">📊 Questão de Múltipla Escolha</div>';
+            if (enunciado) html += `<div class="quiz-enunciado">${escapeHtml(enunciado)}</div>`;
+            html += `<div class="quiz-pergunta">${escapeHtml(pergunta)}</div>`;
+            if (imageUrl) html += `<img class="quiz-image" src="${escapeAttr(imageUrl)}" alt="Imagem da pergunta">`;
+
+            const name = quizId + '_name';
+            html += `<div class="quiz-options">`;
+            html += optionHtml(name, 1, opt1, correct === '1');
+            html += optionHtml(name, 2, opt2, correct === '2');
+            html += optionHtml(name, 3, opt3, correct === '3');
+            html += optionHtml(name, 4, opt4, correct === '4');
+            html += `</div>`;
+
+            html += `<div class="quiz-actions">
+                        <button class="btn" onclick="verificarQuiz(this)" data-quiz-id="${quizId}">Verificar Resposta</button>
+                        <div class="quiz-result" data-result-for="${quizId}"></div>
+                     </div>`;
+
+            container.innerHTML = html;
+            document.getElementById('visualizacao').appendChild(container);
+
+            const radios = container.querySelectorAll('input[type="radio"]');
+            radios.forEach(radio => {
+                const key = 'quiz_answer_' + quizId;
+                radio.setAttribute('data-storage-key', key);
+                radio.addEventListener('change', (e) => {
+                    localStorage.setItem(key, e.target.value);
+                });
+            });
+
+            const saved = localStorage.getItem('quiz_answer_' + quizId);
+            if (saved) {
+                const toCheck = container.querySelector(`input[type="radio"][value="${saved}"]`);
+                if (toCheck) toCheck.checked = true;
+            }
+
+            document.getElementById('quizEnunciado').value = '';
+            document.getElementById('quizImageUrl').value = '';
+            document.getElementById('quizPergunta').value = '';
+            document.getElementById('quizOpt1').value = '';
+            document.getElementById('quizOpt2').value = '';
+            document.getElementById('quizOpt3').value = '';
+            document.getElementById('quizOpt4').value = '';
+            document.getElementById('quizCorrect').value = '1';
+            fecharInsercao('quizPopup');
+        }
+
+        function optionHtml(name, index, text, isCorrect) {
+            const val = String(index);
+            const mark = isCorrect ? 'data-correct="true"' : '';
+            const letters = ['A', 'B', 'C', 'D'];
+            return `<label class="option-label" data-option-for="${name}">
+                        <input class="option-input" type="radio" name="${name}" value="${val}" ${mark}>
+                        <span><strong>${letters[index-1]})</strong> ${escapeHtml(text)}</span>
+                    </label>`;
+        }
+
+        function verificarQuiz(btn) {
+            const quizId = btn.getAttribute('data-quiz-id');
+            const container = btn.closest('.quiz-card');
+            if (!container) return;
+            
+            const radios = container.querySelectorAll('input[type="radio"]');
+            const resultBox = container.querySelector(`.quiz-result[data-result-for="${quizId}"]`);
+            
+            container.querySelectorAll('.option-label').forEach(l => l.classList.remove('correct', 'incorrect'));
+
+            let correctRadio = null;
+            radios.forEach(r => {
+                if (r.hasAttribute('data-correct')) correctRadio = r;
+            });
+
+            const selected = container.querySelector('input[type="radio"]:checked');
+            if (!selected) {
+                resultBox.textContent = '⚠️ Escolha uma opção antes de verificar.';
+                resultBox.style.color = '#ff9800';
+                return;
+            }
+
+            if (correctRadio) {
+                const correctLabel = correctRadio.closest('.option-label');
+                if (correctLabel) correctLabel.classList.add('correct');
+            }
+            
+            const selectedLabel = selected.closest('.option-label');
+            if (selectedLabel && !selected.hasAttribute('data-correct')) {
+                selectedLabel.classList.add('incorrect');
+            }
+
+            const key = 'quiz_answer_' + quizId;
+            localStorage.setItem(key, selected.value);
+            const acerto = selected.hasAttribute('data-correct') ? 1 : 0;
+            resultBox.textContent = acerto ? '✅ Resposta correta!' : '❌ Resposta incorreta';
+            resultBox.style.color = acerto ? '#28a745' : '#dc3545';
+        }
+
+        window.addEventListener('load', () => {
+            document.querySelectorAll('.quiz-card').forEach(container => {
+                const quizId = container.getAttribute('data-quiz-id');
+                if (!quizId) return;
+                const key = 'quiz_answer_' + quizId;
+                const saved = localStorage.getItem(key);
+                if (saved) {
+                    const r = container.querySelector(`input[type="radio"][value="${saved}"]`);
+                    if (r) r.checked = true;
+                }
+            });
+        });
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text.replace(/[&<>"]/g, function(tag) {
+                const charsToReplace = {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;'
+                };
+                return charsToReplace[tag] || tag;
+            });
+        }
+
+        function escapeAttr(text) {
+            return escapeHtml(text).replace(/'/g, "&#39;");
+        }
+
+        // ==================== LIMPAR LOCALSTORAGE ====================
+        function limparLocalStorage() {
+            if (!confirm('Deseja realmente apagar todas as respostas salvas?')) return;
+            const keys = Object.keys(localStorage);
+            keys.forEach(k => {
+                if (k.startsWith('resposta_') || k.startsWith('quiz_answer_')) {
+                    localStorage.removeItem(k);
+                }
+            });
+            alert('✅ Respostas apagadas com sucesso!');
+        }
+
+        // ==================== EXPORTAR HTML ====================
+        function baixarCodigoHTML() {
+            const viewer = document.getElementById('viewer');
+            const viewerClone = viewer.cloneNode(true);
+            
+            const elementosEditaveis = viewerClone.querySelectorAll('[contenteditable="true"]');
+            elementosEditaveis.forEach(element => element.removeAttribute('contenteditable'));
+
+            const html = `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Livro Didático Digital</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Georgia', serif; 
+            font-size: 18px; 
+            line-height: 1.8; 
+            padding: 40px; 
+            max-width: 1000px; 
+            margin: 0 auto;
+            background: #f8f9fa;
+            color: #333;
+        }
+        h1 { 
+            text-align: center; 
+            color: white; 
+            font-size: 36px; 
+            font-weight: bold; 
+            min-height: 180px; 
+            padding: 30px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            border-radius: 12px; 
+            margin: 0 0 30px 0; 
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        h2 { 
+            color: #667eea; 
+            font-size: 28px; 
+            margin: 30px 0 15px 0; 
+            padding-bottom: 10px; 
+            border-bottom: 3px solid #667eea; 
+        }
+        h2 + p:first-letter {
+            float: left;
+            font-size: 3.8em;
+            line-height: 0.9;
+            padding-right: 12px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        p { margin: 15px 0; text-align: justify; }
+        img { max-width: 100%; height: auto; border-radius: 10px; margin: 20px 0; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .video-container { 
+            position: relative; 
+            padding-bottom: 56.25%; 
+            height: 0; 
+            margin: 20px 0; 
+            border-radius: 10px; 
+            overflow: hidden; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+        }
+        .video-container iframe { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+        }
+        .dica-destacada { 
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%); 
+            padding: 25px; 
+            border-radius: 12px; 
+            border-left: 5px solid #667eea; 
+            font-weight: 500; 
+            margin: 25px 0; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+        }
+        .dica-destacada::before { content: "💡 Dica: "; font-weight: bold; color: #667eea; }
+        .pergunta-direta { 
+            margin: 25px 0; 
+            padding: 20px; 
+            background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%); 
+            border-left: 5px solid #764ba2; 
+            border-radius: 12px; 
+            font-weight: 600; 
+            color: #764ba2; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+        }
+        .papel-resposta { 
+            display: block; 
+            width: 100%; 
+            min-height: 150px; 
+            padding: 15px; 
+            font-family: 'Georgia', serif; 
+            font-size: 16px; 
+            line-height: 32px; 
+            border: 2px solid #e0e0e0; 
+            border-radius: 10px; 
+            outline: none; 
+            background: white; 
+            resize: vertical; 
+            margin: 15px 0; 
+        }
+        .papel-resposta:focus { 
+            border-color: #667eea; 
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); 
+        }
+        .quiz-card { 
+            margin: 25px 0; 
+            padding: 25px; 
+            border-radius: 12px; 
+            background: white; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08); 
+            border: 2px solid #e0e0e0; 
+        }
+        .quiz-header { 
+            font-weight: bold; 
+            margin-bottom: 12px; 
+            color: #667eea; 
+            font-size: 16px; 
+            text-transform: uppercase; 
+        }
+        .quiz-enunciado { 
+            font-size: 17px; 
+            margin-bottom: 12px; 
+            color: #555; 
+            font-style: italic; 
+        }
+        .quiz-pergunta { 
+            font-size: 18px; 
+            font-weight: 600; 
+            color: #333; 
+            margin-bottom: 15px; 
+        }
+        .quiz-image { 
+            max-width: 100%; 
+            margin: 15px 0; 
+            border-radius: 10px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+        }
+        .option-label { 
+            display: block; 
+            margin: 10px 0; 
+            padding: 15px; 
+            border-radius: 10px; 
+            border: 2px solid #e0e0e0; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+            background: white; 
+        }
+        .option-label:hover { 
+            border-color: #667eea; 
+            background: #667eea05; 
+        }
+        .option-input { margin-right: 12px; }
+        .option-label.correct { 
+            background: #d4edda; 
+            border-color: #28a745; 
+        }
+        .option-label.incorrect { 
+            background: #f8d7da; 
+            border-color: #dc3545; 
+        }
+        .quiz-actions { 
+            margin-top: 20px; 
+            display: flex; 
+            gap: 15px; 
+            align-items: center; 
+        }
+        .quiz-result { 
+            font-weight: bold; 
+            font-size: 16px; 
+        }
+        .btn { 
+            padding: 12px 24px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            transition: all 0.3s ease; 
+        }
+        .btn:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); 
+        }
+
+        /* Tutor de IA */
+        #gem-trigger {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+            transition: all 0.3s ease;
+            z-index: 10000;
+            border: 3px solid white;
+        }
+        #gem-trigger:hover {
+            transform: scale(1.1) rotate(10deg);
+        }
+        #gem-chat-window {
+            position: fixed;
+            bottom: 120px;
+            right: 30px;
+            width: 400px;
+            max-width: 90vw;
+            height: 600px;
+            max-height: 80vh;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+            display: none;
+            flex-direction: column;
+            z-index: 9999;
+            overflow: hidden;
+            border: 2px solid #667eea;
+        }
+        #gem-chat-window.active { display: flex; }
+        .gem-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .gem-header h3 {
+            font-size: 18px;
+            margin: 0;
+            color: white;
+        }
+        .gem-close {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+        }
+        #gem-messages-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .gem-msg {
+            padding: 12px 16px;
+            border-radius: 15px;
+            max-width: 85%;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .gem-msg.user {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            align-self: flex-end;
+        }
+        .gem-msg.assistant {
+            background: white;
+            color: #333;
+            align-self: flex-start;
+            border: 1px solid #e0e0e0;
+        }
+        .gem-input-box {
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+            background: white;
+            border-top: 2px solid #f0f0f0;
+        }
+        #gem-input {
+            flex: 1;
+            padding: 12px 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            outline: none;
+            font-size: 14px;
+        }
+        #gem-send {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        #gem-typing {
+            display: none;
+            padding: 10px 20px;
+            font-size: 13px;
+            color: #999;
+        }
+        #gem-typing.active { display: block; }
+    </style>
+</head>
+<body>
+    ${viewerClone.innerHTML}
+
+    <!-- Tutor de IA -->
+    <div id="gem-assistant-container">
+        <div id="gem-trigger">🤖</div>
+        <div id="gem-chat-window">
+            <div class="gem-header">
+                <h3>🤖 Tutor Inteligente</h3>
+                <button class="gem-close">×</button>
+            </div>
+            <div id="gem-messages-area">
+                <div class="gem-msg assistant">Olá! Sou seu tutor inteligente. Como posso ajudar você hoje?</div>
+            </div>
+            <div id="gem-typing">Digitando...</div>
+            <div class="gem-input-box">
+                <input type="text" id="gem-input" placeholder="Digite sua pergunta..." autocomplete="off">
+                <button id="gem-send">Enviar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Restaurar respostas de perguntas diretas
+        document.querySelectorAll('.papel-resposta').forEach(area => {
+            const chave = area.getAttribute('data-chave');
+            if (chave && localStorage.getItem(chave)) {
+                area.value = localStorage.getItem(chave);
+            }
+            area.addEventListener('input', () => {
+                if (chave) localStorage.setItem(chave, area.value);
+            });
+        });
+
+        // Restaurar respostas de quizzes
+        document.querySelectorAll('.quiz-card').forEach(container => {
+            const quizId = container.getAttribute('data-quiz-id');
+            if (!quizId) return;
+            const key = 'quiz_answer_' + quizId;
+            
+            const radios = container.querySelectorAll('input[type="radio"]');
+            radios.forEach(r => {
+                r.addEventListener('change', (e) => {
+                    localStorage.setItem(key, e.target.value);
+                });
+            });
+            
+            const saved = localStorage.getItem(key);
+            if (saved) {
+                const r = container.querySelector('input[type="radio"][value="' + saved + '"]');
+                if (r) r.checked = true;
+            }
+        });
+
+        // Função de verificação de quiz
+        window.verificarQuiz = function(btn) {
+            const container = btn.closest('.quiz-card');
+            if (!container) return;
+            
+            const radios = container.querySelectorAll('input[type="radio"]');
+            const quizId = container.getAttribute('data-quiz-id');
+            const resultBox = container.querySelector('.quiz-result');
+            
+            container.querySelectorAll('.option-label').forEach(l => l.classList.remove('correct', 'incorrect'));
+
+            let correctRadio = null;
+            radios.forEach(r => {
+                if (r.hasAttribute('data-correct')) correctRadio = r;
+            });
+
+            const selected = container.querySelector('input[type="radio"]:checked');
+            if (!selected) {
+                if (resultBox) {
+                    resultBox.textContent = '⚠️ Escolha uma opção antes de verificar.';
+                    resultBox.style.color = '#ff9800';
+                }
+                return;
+            }
+
+            if (correctRadio) {
+                const correctLabel = correctRadio.closest('.option-label');
+                if (correctLabel) correctLabel.classList.add('correct');
+            }
+            
+            const selectedLabel = selected.closest('.option-label');
+            if (selectedLabel && !selected.hasAttribute('data-correct')) {
+                selectedLabel.classList.add('incorrect');
+            }
+
+            const key = 'quiz_answer_' + quizId;
+            localStorage.setItem(key, selected.value);
+            const acerto = selected.hasAttribute('data-correct') ? 1 : 0;
+            if (resultBox) {
+                resultBox.textContent = acerto ? '✅ Resposta correta!' : '❌ Resposta incorreta';
+                resultBox.style.color = acerto ? '#28a745' : '#dc3545';
+            }
+        };
+
+        // TUTOR DE IA
+        (function() {
+            const API_KEY = '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';
+            const MODEL = 'llama-3.1-8b-instant';
+            
+            const trigger = document.getElementById('gem-trigger');
+            const windowChat = document.getElementById('gem-chat-window');
+            const input = document.getElementById('gem-input');
+            const btn = document.getElementById('gem-send');
+            const closeBtn = document.querySelector('.gem-close');
+            const area = document.getElementById('gem-messages-area');
+            const typing = document.getElementById('gem-typing');
+
+            let history = [];
+
+            trigger.onclick = () => {
+                windowChat.classList.toggle('active');
+                if (windowChat.classList.contains('active')) input.focus();
+            };
+
+            closeBtn.onclick = () => {
+                windowChat.classList.remove('active');
+            };
+
+            const handleSend = async () => {
+                const text = input.value.trim();
+                if (!text) return;
+
+                addMsg(text, 'user');
+                input.value = '';
+                typing.classList.add('active');
+                area.scrollTop = area.scrollHeight;
+
+                history.push({ role: 'user', content: text });
+
+                try {
+                    const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': 'Bearer ' + API_KEY,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            model: MODEL,
+                            messages: [
+                                { role: 'system', content: 'Você é um assistente educacional útil, amigável e didático. Responda de forma clara e objetiva.' },
+                                ...history.slice(-6)
+                            ],
+                            temperature: 0.7
+                        })
+                    });
+
+                    const data = await resp.json();
+                    const reply = data.choices[0].message.content;
+                    
+                    addMsg(reply, 'assistant');
+                    history.push({ role: 'assistant', content: reply });
+                } catch (e) {
+                    addMsg("Desculpe, ocorreu um erro ao conectar com o servidor. Verifique sua conexão e tente novamente.", 'assistant');
+                } finally {
+                    typing.classList.remove('active');
+                    area.scrollTop = area.scrollHeight;
+                }
+            };
+
+            btn.onclick = handleSend;
+            input.onkeydown = (e) => { if (e.key === 'Enter') handleSend(); };
+
+            function addMsg(text, side) {
+                const d = document.createElement('div');
+                d.className = 'gem-msg ' + side;
+                d.innerText = text;
+                area.appendChild(d);
+                area.scrollTop = area.scrollHeight;
+            }
+        })();
+    <\/script>
+</body>
+</html>`;
+
+            const blob = new Blob([html], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'livro-didatico.html';
+            link.click();
+            setTimeout(() => URL.revokeObjectURL(url), 5000);
+            
+            alert('✅ Arquivo HTML baixado com sucesso!');
+        }
+
+        // ==================== TUTOR DE IA ====================
+        (function() {
+            const API_KEY = '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';
+            const MODEL = 'llama-3.1-8b-instant';
+            
+            const trigger = document.getElementById('gem-trigger');
+            const windowChat = document.getElementById('gem-chat-window');
+            const input = document.getElementById('gem-input');
+            const btn = document.getElementById('gem-send');
+            const closeBtn = document.querySelector('.gem-close');
+            const area = document.getElementById('gem-messages-area');
+            const typing = document.getElementById('gem-typing');
+
+            let history = [];
+
+            trigger.onclick = () => {
+                windowChat.classList.toggle('active');
+                if (windowChat.classList.contains('active')) input.focus();
+            };
+
+            closeBtn.onclick = () => {
+                windowChat.classList.remove('active');
+            };
+
+            const handleSend = async () => {
+                const text = input.value.trim();
+                if (!text) return;
+
+                addMsg(text, 'user');
+                input.value = '';
+                typing.classList.add('active');
+                area.scrollTop = area.scrollHeight;
+
+                history.push({ role: 'user', content: text });
+
+                try {
+                    const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${API_KEY}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            model: MODEL,
+                            messages: [
+                                { role: 'system', content: 'Você é um assistente educacional útil, amigável e didático. Responda de forma clara e objetiva, ajudando o aluno a compreender os conceitos.' },
+                                ...history.slice(-6)
+                            ],
+                            temperature: 0.7
+                        })
+                    });
+
+                    const data = await resp.json();
+                    const reply = data.choices[0].message.content;
+                    
+                    addMsg(reply, 'assistant');
+                    history.push({ role: 'assistant', content: reply });
+                } catch (e) {
+                    addMsg("Desculpe, ocorreu um erro ao conectar com o servidor. Verifique sua conexão e tente novamente.", 'assistant');
+                } finally {
+                    typing.classList.remove('active');
+                    area.scrollTop = area.scrollHeight;
+                }
+            };
+
+            btn.onclick = handleSend;
+            input.onkeydown = (e) => { if (e.key === 'Enter') handleSend(); };
+
+            function addMsg(text, side) {
+                const d = document.createElement('div');
+                d.className = `gem-msg ${side}`;
+                d.innerText = text;
+                area.appendChild(d);
+                area.scrollTop = area.scrollHeight;
+            }
+        })();
+    </script>
+</body>
+</html>
